@@ -1,5 +1,8 @@
 package app.parking.service;
 
-public interface ParkingSpaceImpl {
+import org.springframework.stereotype.Service;
+
+@Service
+public class ParkingSpaceImpl implements ParkingService {
 
 }

@@ -1,5 +1,5 @@
 package app.parking.service;
 
-public class ParkingService {
+public interface ParkingService {
 
 }
