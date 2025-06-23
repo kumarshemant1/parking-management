@@ -1,5 +1,6 @@
 package app.parking.service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import app.parking.entity.Ticket;
 import app.parking.entity.Vehicle;
 import app.parking.entity.VehicleCategory;
 import app.parking.exception.NoVacantSpaceException;
+import app.parking.exception.VehicleException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 
@@ -40,6 +42,8 @@ public class ParkingSpaceImpl implements ParkingService {
 		Integer floorNumber = parkingSpace.getParkingSpacePK().getFloorNumber();
 		VehicleCategory vehicleCategory = parkingSpace.getParkingSpacePK().getVehicleCategory();
 		Integer spaceNumber = parkingSpace.getParkingSpacePK().getSpaceNumber();
+		
+		// TODO if a particular parking space is occupied by a vehicle then we cant remove the parking unless the vehicle departs 
 		
 		return parkingSpaceRepository.deleteByNameAndFloorNumberAndVehicleCategoryAndSpaceNumber(name, floorNumber, vehicleCategory, spaceNumber);
 	}
@@ -76,8 +80,22 @@ public class ParkingSpaceImpl implements ParkingService {
 
 	@Override
 	public Ticket unassignParkingSpace(@NotNull String name, @NotNull Vehicle vehicle) {
+		String vehicleNumber = vehicle.getVehicleNumber();
+		Ticket ticket = ticketRepository.findByNameAndVehicleNumberAndExitTimeIsNull(name, vehicleNumber);
+		if(ticket == null) {
+			throw new VehicleException("No such vehicle is parked at the parking space");
+		}
+		ticket.setExitTime(LocalDateTime.now());
+		Duration duration = Duration.between(ticket.getEntryTime(), ticket.getExitTime());
+		long minutes = duration.toMinutes();
+		ticket.setBill(minutes*0.33f);
+		saveTicket(ticket);
+		ParkingSpace parkingSpace = parkingSpaceRepository.findByNameAndVehicleNumber(name, vehicle.getVehicleNumber());
+		parkingSpace.setOccupied(Boolean.FALSE);
+		parkingSpace.setVehicleNumber(null);
+		saveParkingSpace(parkingSpace);
 		
-		return null;
+		return ticket;
 	}
 	
 	private ParkingSpace saveParkingSpace(ParkingSpace parkingSpace) {

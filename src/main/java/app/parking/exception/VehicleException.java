@@ -1,5 +1,8 @@
 package app.parking.exception;
 
-public class VehicleException {
+public class VehicleException extends RuntimeException {
 
+	public VehicleException(String message) {
+		super(message);
+	}
 }
