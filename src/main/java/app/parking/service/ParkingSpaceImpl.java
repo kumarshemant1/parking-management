@@ -59,7 +59,8 @@ public class ParkingSpaceImpl implements ParkingService {
 		Ticket ticket = new Ticket();
 		ticket.setEntryTime(LocalDateTime.now());
 		ticket.setName(name);
-		ticket.setVehicle(vehicle);
+		Vehicle existingVehicle = vehicleRepository.findById(vehicle.getVehicleNumber()).orElseGet(() -> vehicleRepository.save(vehicle));
+		ticket.setVehicle(existingVehicle);
 		saveTicket(ticket);
 		return parkingSpace;
 	}

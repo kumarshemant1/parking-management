@@ -27,6 +27,6 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Park
 			+ "AND ps.parkingSpacePK.vehicleCategory = :vehicleCategory "
 			+ "AND ps.isOccupied = :isOccupied")
 	List<ParkingSpace> findByNameAndVehicleCategoryAndIsOccupied(@NotNull String name,
-			@NotNull VehicleCategory vehicleCategory, Boolean isOccupied);
-	
+			VehicleCategory vehicleCategory, Boolean isOccupied);
+
 }
