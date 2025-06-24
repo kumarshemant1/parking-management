@@ -16,17 +16,20 @@ import jakarta.validation.constraints.NotNull;
 public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, ParkingSpacePK> {
 
 	@Modifying
-	@Query("DELETE FROM ParkingSpace ps WHERE ps.parkingSpacePK.name = :name "
-			+ "AND ps.parkingSpacePK.floorNumber = :floorNumber "
-			+ "AND ps.parkingSpacePK.vehicleCategory = :vehicleCategory "
-			+ "AND ps.parkingSpacePK.spaceNumber = :spaceNumber")
+	@Query("DELETE FROM ParkingSpace ps WHERE ps.parkingSpacePK.name = ?1 "
+			+ "AND ps.parkingSpacePK.floorNumber = ?2 "
+			+ "AND ps.parkingSpacePK.vehicleCategory = ?3 "
+			+ "AND ps.parkingSpacePK.spaceNumber = ?4")
 	Integer deleteByNameAndFloorNumberAndVehicleCategoryAndSpaceNumber(String name, Integer floorNumber,
 			VehicleCategory vehicleCategory, Integer spaceNumber);
 
-	@Query("SELECT ps FROM ParkingSpace ps WHERE ps.parkingSpacePK.name = :name "
-			+ "AND ps.parkingSpacePK.vehicleCategory = :vehicleCategory "
-			+ "AND ps.isOccupied = :isOccupied")
+	@Query("SELECT ps FROM ParkingSpace ps WHERE ps.parkingSpacePK.name = ?1 "
+			+ "AND ps.parkingSpacePK.vehicleCategory = ?2 "
+			+ "AND ps.isOccupied = ?3")
 	List<ParkingSpace> findByNameAndVehicleCategoryAndIsOccupied(@NotNull String name,
 			VehicleCategory vehicleCategory, Boolean isOccupied);
 
+	@Query("SELECT ps FROM ParkingSpace ps WHERE ps.parkingSpacePK.name = ?1 "
+			+ "AND ps.vehicleNumber = ?2")
+	ParkingSpace findByNameAndVehicleNumber(String name, String vehicleNumber);
 }
