@@ -37,6 +37,7 @@ public class ParkingSpaceImpl implements ParkingService {
 	}
 
 	@Override
+	@Transactional
 	public Integer removeParkingSpace(@NotNull ParkingSpace parkingSpace) {
 		String name = parkingSpace.getParkingSpacePK().getName();
 		Integer floorNumber = parkingSpace.getParkingSpacePK().getFloorNumber();
@@ -79,6 +80,7 @@ public class ParkingSpaceImpl implements ParkingService {
 	}
 
 	@Override
+	@Transactional
 	public Ticket unassignParkingSpace(@NotNull String name, @NotNull Vehicle vehicle) {
 		String vehicleNumber = vehicle.getVehicleNumber();
 		Ticket ticket = ticketRepository.findByNameAndVehicleNumberAndExitTimeIsNull(name, vehicleNumber);
