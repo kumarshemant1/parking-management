@@ -44,7 +44,7 @@ public class ParkingSpaceImpl implements ParkingService {
 		VehicleCategory vehicleCategory = parkingSpace.getParkingSpacePK().getVehicleCategory();
 		Integer spaceNumber = parkingSpace.getParkingSpacePK().getSpaceNumber();
 		
-		// TODO if a particular parking space is occupied by a vehicle then we cant remove the parking unless the vehicle departs 
+//		TODO if a particular parking space is occupied by a vehicle then we cant remove the parking unless the vehicle departs 
 		
 		return parkingSpaceRepository.deleteByNameAndFloorNumberAndVehicleCategoryAndSpaceNumber(name, floorNumber, vehicleCategory, spaceNumber);
 	}
@@ -57,6 +57,7 @@ public class ParkingSpaceImpl implements ParkingService {
 		if(parkingSpace == null) {
 			throw new NoVacantSpaceException("No vacant parking space available for " + vehicleCategory + " at the moment, kindly wait");
 		}
+//		TODO check if same vehicle is trying to assign a parking space without exiting from previous assigned space
 		parkingSpace.setOccupied(Boolean.TRUE);
 		parkingSpace.setVehicleNumber(vehicle.getVehicleNumber());
 		saveParkingSpace(parkingSpace);
